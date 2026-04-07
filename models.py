@@ -24,3 +24,6 @@ class OrderedGalleryImage(models.Model):
     class Meta:
         abstract = True
         ordering = ['order', 'id']
+
+    def get_image_url(self) -> str | None:
+        return self.image.url if self.image else None

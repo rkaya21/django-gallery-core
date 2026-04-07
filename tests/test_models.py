@@ -37,3 +37,26 @@ class TestOrderedGalleryImageMeta:
 
     def test_default_ordering(self):
         assert list(OrderedGalleryImage._meta.ordering) == ['order', 'id']
+
+
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
+from tests.models import Album, AlbumImage
+
+
+@pytest.mark.django_db
+class TestGetImageUrl:
+    def test_returns_url_when_image_set(self):
+        album = Album.objects.create(title='Test')
+        img = AlbumImage.objects.create(
+            album=album,
+            image=SimpleUploadedFile('photo.png', b'data', content_type='image/png'),
+            order=1,
+        )
+        assert img.get_image_url() is not None
+        assert 'photo.png' in img.get_image_url()
+
+    def test_returns_none_when_image_empty(self):
+        album = Album.objects.create(title='Test')
+        img = AlbumImage.objects.create(album=album, image=None, order=1)
+        assert img.get_image_url() is None
