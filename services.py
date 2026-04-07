@@ -26,6 +26,22 @@ def sync_gallery_uploads(
     remove_ids: list[int] | None = None,
     parent_field: str | None = None,
 ) -> None:
+    """Add new gallery images and optionally remove existing ones.
+
+    Intended for use inside form or serializer save methods that handle
+    multipart file uploads.
+
+    :param instance: The parent model instance owning the gallery.
+    :param related_name: The reverse relation name on ``instance``
+        (e.g. ``'gallery_images'``).
+    :param image_model: The concrete image model class to create rows in.
+    :param gallery_files: Iterable of uploaded files. ``None`` and falsy
+        values are silently skipped.
+    :param remove_ids: Primary keys of existing image rows to delete before
+        adding new ones. Pass ``None`` or an empty list to skip deletion.
+    :param parent_field: Name of the ForeignKey field on ``image_model``
+        pointing to the parent. Detected automatically when omitted.
+    """
     if parent_field is None:
         parent_field = _resolve_parent_field(image_model, instance)
 
@@ -53,6 +69,16 @@ def reorder_gallery(
     related_name: str,
     new_order: list[int],
 ) -> None:
+    """Reorder gallery images by assigning new ``order`` values.
+
+    :param instance: The parent model instance owning the gallery.
+    :param related_name: The reverse relation name on ``instance``
+        (e.g. ``'gallery_images'``).
+    :param new_order: List of image primary keys in the desired display order.
+        Must contain exactly the same IDs as the current gallery — no more,
+        no fewer.
+    :raises ValueError: If ``new_order`` does not match the current set of IDs.
+    """
     manager = getattr(instance, related_name)
     existing_ids = set(manager.values_list('id', flat=True))
 
