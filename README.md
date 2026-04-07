@@ -61,6 +61,7 @@ The intended public surface area is:
 - `gallery.serializers.OrderedGalleryImageSerializer`
 - `gallery.admin.OrderedGalleryInline`
 - `gallery.services.sync_gallery_uploads`
+- `gallery.services.reorder_gallery`
 
 Anything outside this surface should be treated as internal and may change more freely.
 

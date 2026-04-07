@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-__all__ = ['sync_gallery_uploads']
+__all__ = ['sync_gallery_uploads', 'reorder_gallery']
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models import ForeignKey, Model
@@ -45,3 +45,22 @@ def sync_gallery_uploads(
             'image': image_file,
             'order': next_order + offset,
         })
+
+
+def reorder_gallery(
+    *,
+    instance: Model,
+    related_name: str,
+    new_order: list[int],
+) -> None:
+    manager = getattr(instance, related_name)
+    existing_ids = set(manager.values_list('id', flat=True))
+
+    if set(new_order) != existing_ids:
+        raise ValueError(
+            f"new_order must contain exactly the same IDs as the current gallery. "
+            f"Expected {sorted(existing_ids)}, got {sorted(new_order)}."
+        )
+
+    for position, image_id in enumerate(new_order, start=1):
+        manager.filter(id=image_id).update(order=position)
