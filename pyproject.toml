@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-gallery-core"
+version = "0.1.0"
+description = "Reusable ordered gallery primitives for Django projects."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Recep Enes Kaya" }
+]
+requires-python = ">=3.11"
+dependencies = [
+  "Django>=5.0",
+  "djangorestframework>=3.15",
+]
+keywords = ["django", "gallery", "images", "portfolio", "cms"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Framework :: Django",
+  "Framework :: Django :: 5.0",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8.0",
+  "pytest-django>=4.8",
+  "Pillow>=10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rkaya21/django-gallery-core"
+Repository = "https://github.com/rkaya21/django-gallery-core"
+Issues = "https://github.com/rkaya21/django-gallery-core/issues"
+
+[tool.setuptools]
+packages = ["gallery"]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+gallery = "."
+
+[tool.setuptools.package-data]
+gallery = ["py.typed"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+pythonpath = ["."]
