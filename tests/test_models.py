@@ -1,4 +1,8 @@
+import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 from gallery.models import GalleryUploadTo, OrderedGalleryImage
+from tests.models import Album, AlbumImage
 
 
 class TestGalleryUploadTo:
@@ -37,11 +41,6 @@ class TestOrderedGalleryImageMeta:
 
     def test_default_ordering(self):
         assert list(OrderedGalleryImage._meta.ordering) == ['order', 'id']
-
-
-import pytest
-from django.core.files.uploadedfile import SimpleUploadedFile
-from tests.models import Album, AlbumImage
 
 
 @pytest.mark.django_db

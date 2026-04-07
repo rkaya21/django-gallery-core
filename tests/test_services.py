@@ -139,7 +139,7 @@ class TestReorderGallery:
     def test_raises_on_missing_ids(self):
         album = Album.objects.create(title='Test')
         img1 = AlbumImage.objects.create(album=album, image=make_image('a.png'), order=1)
-        img2 = AlbumImage.objects.create(album=album, image=make_image('b.png'), order=2)
+        AlbumImage.objects.create(album=album, image=make_image('b.png'), order=2)
 
         with pytest.raises(ValueError):
             reorder_gallery(
