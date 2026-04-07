@@ -109,13 +109,16 @@ class ProjectWriteSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'gallery']
 
     def update(self, instance, validated_data):
+        request = self.context['request']
+        # IDs to delete come from the client (e.g. a hidden field listing removed images)
+        remove_ids = [int(x) for x in request.data.getlist('remove_gallery_ids') if x]
         instance = super().update(instance, validated_data)
         sync_gallery_uploads(
             instance=instance,
             related_name='gallery_images',
             image_model=ProjectImage,
-            gallery_files=self.context['request'].FILES.getlist('gallery_images'),
-            remove_ids=[],
+            gallery_files=request.FILES.getlist('gallery_images'),
+            remove_ids=remove_ids,
         )
         return instance
 ```
@@ -160,8 +163,14 @@ A minimal integration example lives in [example.py](./example.py).
 ## Development
 
 ```bash
-pip install -e ".[test]"
-pytest
+# Install all dev dependencies (tests + linting)
+pip install -e ".[dev]"
+
+# Run tests with coverage
+pytest --cov=gallery --cov-report=term-missing
+
+# Lint
+ruff check .
 ```
 
 ## Versioning

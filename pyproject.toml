@@ -33,7 +33,14 @@ classifiers = [
 test = [
   "pytest>=8.0",
   "pytest-django>=4.8",
+  "pytest-cov>=5.0",
   "Pillow>=10.0",
+]
+lint = [
+  "ruff>=0.4",
+]
+dev = [
+  "django-gallery-core[test,lint]",
 ]
 
 [project.urls]
@@ -54,3 +61,28 @@ gallery = ["py.typed"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+  "tests/*",
+  "example.py",
+  "*/site-packages/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["gallery", "tests"]
